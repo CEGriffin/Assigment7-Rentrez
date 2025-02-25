@@ -1,0 +1,62 @@
+---
+title: "Analysis"
+output:
+  html_document: default
+  pdf_document: default
+date: "2025-02-25"
+---
+Clarisa Griffin 20270784
+(I did this assignment alone)
+
+Install libraries
+```{r}
+library(dplyr)
+```
+
+Import Sequences.csv file
+```{r}
+Sequences<-read.csv("Seqeunces.csv", header=T)
+```
+
+
+Count the number of each nucleotide in each sequence and display results in 3 tables
+```{r}
+#create custom function to count the number of each nucleotides in each sequence
+nucleotide_number<-function(x){
+  outputC<-nchar(gsub("A|T|G|N", "", x))
+  outputG<-nchar(gsub("A|T|C|N", "", x))
+  outputA<-nchar(gsub("C|T|G|N", "", x))
+  outputT<-nchar(gsub("A|C|G|N", "", x))
+  outputN<-nchar(gsub("A|C|G|T", "", x))
+  print(cbind(Nucleotide=c("A","T","C","G","Unknown"), Abundance=c(outputA, outputT, outputC, outputG, outputN)))
+}
+
+#Sequence 1
+nucleotide_number(Sequences$sequence[1])
+#Sequence 2
+nucleotide_number(Sequences$sequence[2])
+#Sequence 3
+nucleotide_number(Sequences$sequence[3])
+```
+
+Print each sequence
+```{r}
+print(Sequences$sequence[1])
+print(Sequences$sequence[2])
+print(Sequences$sequence[3])
+```
+
+![Image of the bacteria *Borrelia burgdorferi*](./bacteria.jpg)
+
+Link to the [Wikipedia article about *Borrelia burgdorferi*](https://en.wikipedia.org/wiki/Borrelia_burgdorferi)
+
+Calculate GC content and show results in a table
+```{r}
+#create custom function to calculate results
+gc_con<-function(x){
+  output<-round(100*nchar(gsub("A|T|N", "", x))/nchar(gsub("N", "", x)), 2)
+}
+
+#show results in a table
+cbind(Sequence_ID=gsub("(\\w)(\\s).*","\\1", Sequences$name), CG_Content=paste(gc_con(Sequences$sequence)), "%")
+```
