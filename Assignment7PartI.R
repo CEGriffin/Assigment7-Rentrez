@@ -20,15 +20,18 @@ sequences<-unlist(sequences)
 #create an object of sequence headers
 header<-gsub("(^>.*sequence)\\n[ATCG].*","\\1", sequences)
 
-#remove the newline character
-header2<-gsub("(>)(\\w+)", "\\2", header)
+#remove arrow
+header2<-gsub(">", "", header)
 
 #create an object of just sequences
 seq<-gsub("^>.*sequence\\n([ATCG].*)", "\\1", sequences)
 
+#remove the newline character
+seq2<-gsub("\n", "", seq)
+
 #combine headers and sequences into a dataframe
-sequences<-data.frame(name=header2, sequence=seq)
-View(sequences)
+sequences<-data.frame(name=header2, sequence=seq2)
+head(sequences)
 
 #output data frame to a csv file
 write.csv(sequences, file="./Seqeunces.csv", row.names=F)
