@@ -1,0 +1,54 @@
+---
+title: "Report"
+output: html_document
+date: "2025-02-26"
+---
+CANADIAN PUBLIC HEALTH AGENCY
+
+URGETNT - DNA SEQUENCING RESULTS OF PATIENT B3854723 - URGENT
+
+Dear clinician,
+
+I was the research scientist assigened to the blood samples you sent in of patient B3854723. As is regular procedure, I filtered out the human DNA and sequenced the non-human DNA. One sequence caught my eye:
+
+> Human isolate, unknown sequence
+GCCTGATGGAGGGGGATAACTACTGGAAACGGTAGCTAATACCGCATGAC
+CTCGCAAGAGCAAAGTGGGGGACCTTAGGGCCTCACGCCATCGGATGAAC
+CCAGATGGGATTAGCTAGTAGGTGGGGTAATGGCTCACCTAGGCGACGAT
+CCCTAGCTGGTCTGAGAGGATGACCAGCCACACTGGAACTGAGACACGGT
+CCAGACTCCTACGGGAGGCAGCAGTGGGGAATATTGCACAATGGGCGCAA
+
+This DNA belongs to the bacterium Yersinia pestis strain 46514, which as you may know cause the bubonic plague, aka the Black Death. This is a serious contagious disease (the black death was responsible for the death of over 1/3 of Europe in the late middle ages) and it is a matter of great import that you take the proper steps immediately. I have included the link to the ![Canadian government website on the plague](https://www.canada.ca/en/public-health/services/diseases/plague/health-professionals-plague.html) for your information. I have also embedded in this report the images of the common symptoms of this disease so that you migh better diagnose your patient and watch for further spread.
+
+![Symptos of the plague](./plague.png)
+
+I have included the reproducable code I used to come to this conclusion under this message, should you wish to confirm my results.
+
+Regards,
+Clarisa Griffin
+Research Scientist
+Canadian Public Health Agency
+
+Load Library (make sure to install this package first)
+```{r, echo=T, , results="hide"}
+library(BiocManager)
+```
+
+Name DNA sequence
+```{r}
+seq<-"GCCTGATGGAGGGGGATAACTACTGGAAACGGTAGCTAATACCGCATGACCTCGCAAGAGCAAAGTGGGGGACCTTAGGGCCTCACGCCATCGGATGAACCCAGATGGGATTAGCTAGTAGGTGGGGTAATGGCTCACCTAGGCGACGATCCCTAGCTGGTCTGAGAGGATGACCAGCCACACTGGAACTGAGACACGGTCCAGACTCCTACGGGAGGCAGCAGTGGGGAATATTGCACAATGGGCGCAA"
+```
+
+This line of code uploads the DNA sequence to the BLAST infterface, where it is then compared to several millions to billions of known DNA sequences.
+```{r, echo=T, results="hide"}
+seq_Blast_df<-blastSequences(paste(seq), as='data.frame', timeout=240)
+```
+
+Interpret results: the output of this code shows the matches between our DNA and the known DNA from the database
+```{r}
+seq_Blast_df
+```
+The most important rows are these:
+Hit_def is the name of the match of our sequence. In this case, all of our matches are for yersinia pestis, just different strains.
+Hsp_score represents the strength of the match: the higher the score, the better the match. All of our scores are 500, which means a very strong match.
+Hsp_evalue is another way to measure the strength of the match, but this time a better match is a lower number. These numbers are increadibly small, also indicating a very strong match.
